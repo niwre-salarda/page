@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wheel Alignment Specification Lookup <title></title>
+  <title>Wheel Alignment Specification Lookup</title>
   <style>
+    /* CSS styles go here */
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
@@ -116,7 +117,7 @@
         })
         .catch(error => {
           console.error(error);
-          resultContainer.innerHTML = '<h1>Wala kang pam bayad ng API';
+          resultContainer.innerHTML = '<h1>An error occurred while fetching the specification.</h1>';
         });
     });
   </script>
