@@ -1,23 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=\], initial-scale=1.0">
-    <title>Erwin Salarda Github Page</title>
-    <style>
-        body{
-            background-color: gold;
-        }
-        h1{
-            background-color: white;
-            margin:auto;
-            padding: 15px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wheel Alignment Specification Lookup <title></title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    #form-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    #result-container {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to my GitHub Page</h1>
-    <p>This is just the beginning</p>
+  <div id="form-container">
+    <h1>Wheel Alignment Specification Lookup</h1>
+    <form id="lookup-form">
+      <label for="brand">Brand:</label>
+      <input type="text" id="brand" name="brand" required>
+
+      <label for="model">Model:</label>
+      <input type="text" id="model" name="model" required>
+
+      <label for="year">Year:</label>
+      <input type="number" id="year" name="year" required>
+
+      <button type="button" id="lookup-button">Lookup Specification</button>
+    </form>
+    <div id="result-container"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('lookup-form');
+    const brandInput = document.getElementById('brand');
+    const modelInput = document.getElementById('model');
+    const yearInput = document.getElementById('year');
+    const lookupButton = document.getElementById('lookup-button');
+    const resultContainer = document.getElementById('result-container');
+
+    lookupButton.addEventListener('click', () => {
+      const brand = brandInput.value;
+      const model = modelInput.value;
+      const year = parseInt(yearInput.value, 10);
+
+      // Function to make an API request to Hugging Face using Fetch API
+      function getWheelAlignmentSpecification(brand, model, year) {
+        const apiUrl = `https://huggingface.co/api/wheel-alignment?brand=${brand}&model=${model}&year=${year}`;
+
+        return fetch(apiUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            return data;
+          })
+          .catch(error => {
+            throw new Error('Error fetching data from Hugging Face: ' + error.message);
+          });
+      }
+
+      getWheelAlignmentSpecification(brand, model, year)
+        .then(data => {
+          // Process and display the data from Hugging Face API
+          resultContainer.innerHTML = `
+            <h2>Wheel Alignment Specification for ${brand} ${model} (${year})</h2>
+            <p>${data.specification}</p>
+          `;
+        })
+        .catch(error => {
+          console.error(error);
+          resultContainer.innerHTML = '<h1>Wala kang pam bayad ng API';
+        });
+    });
+  </script>
 </body>
 </html>
