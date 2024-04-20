@@ -1,125 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wheel Alignment Specification Lookup</title>
-  <style>
-    /* CSS styles go here */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Generation Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    #form-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      width: 300px;
-    }
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+        }
 
-    h1 {
-      text-align: center;
-    }
+        h1 {
+            text-align: center;
+        }
 
-    label {
-      display: block;
-      margin-top: 10px;
-    }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
 
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
 
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-
-    #result-container {
-      margin-top: 20px;
-    }
-  </style>
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
-  <div id="form-container">
-    <h1>Wheel Alignment Specification Lookup</h1>
-    <form id="lookup-form">
-      <label for="brand">Brand:</label>
-      <input type="text" id="brand" name="brand" required>
+    <div class="container">
+        <h1>Text Generation Form</h1>
+        <form id="inputForm">
+            <input type="text" id="userInput" placeholder="Enter your input text" required>
+            <button type="submit">Generate Text</button>
+        </form>
+        <div id="output"></div>
+    </div>
 
-      <label for="model">Model:</label>
-      <input type="text" id="model" name="model" required>
-
-      <label for="year">Year:</label>
-      <input type="number" id="year" name="year" required>
-
-      <button type="button" id="lookup-button">Lookup Specification</button>
-    </form>
-    <div id="result-container"></div>
-  </div>
-
-  <script>
-    const form = document.getElementById('lookup-form');
-    const brandInput = document.getElementById('brand');
-    const modelInput = document.getElementById('model');
-    const yearInput = document.getElementById('year');
-    const lookupButton = document.getElementById('lookup-button');
-    const resultContainer = document.getElementById('result-container');
-
-    lookupButton.addEventListener('click', () => {
-      const brand = brandInput.value;
-      const model = modelInput.value;
-      const year = parseInt(yearInput.value, 10);
-
-      // Function to make an API request to Hugging Face using Fetch API
-      function getWheelAlignmentSpecification(brand, model, year) {
-        const apiUrl = `https://huggingface.co/api/wheel-alignment?brand=${brand}&model=${model}&year=${year}`;
-
-        return fetch(apiUrl)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
+    <script>
+        const modelData = {
+            id: "CohereForAI/c4ai-command-r-plus",
+            sha: "ba7f1d954c9d1609013677d87e4142ab95c34e62",
+            pipeline_tag: "text-generation",
+            library_name: "transformers",
+            private: false,
+            gated: false,
+            siblings: [],
+            safetensors: {
+                parameters: {
+                    F16: 103810674688
+                }
+            },
+            cardData: {
+                tags: null,
+                base_model: null
             }
-            return response.json();
-          })
-          .then(data => {
-            return data;
-          })
-          .catch(error => {
-            throw new Error('Error fetching data from Hugging Face: ' + error.message);
-          });
-      }
+        };
 
-      getWheelAlignmentSpecification(brand, model, year)
-        .then(data => {
-          // Process and display the data from Hugging Face API
-          resultContainer.innerHTML = `
-            <h2>Wheel Alignment Specification for ${brand} ${model} (${year})</h2>
-            <p>${data.specification}</p>
-          `;
-        })
-        .catch(error => {
-          console.error(error);
-          resultContainer.innerHTML = '<h1>An error occurred while fetching the specification.</h1>';
+        async function query(data) {
+            const response = await fetch(
+                "https://api-inference.huggingface.co/models/" + modelData.id,
+                {
+                    headers: { Authorization: "Bearer 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" },
+                    method: "POST",
+                    body: JSON.stringify(data),
+                }
+            );
+            const result = await response.json();
+            return result;
+        }
+
+        document.getElementById("inputForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const userInput = document.getElementById("userInput").value;
+            const data = {
+                inputs: userInput,
+            };
+            query(data).then((response) => {
+                const outputText = response.generated_text;
+                document.getElementById("output").textContent = outputText;
+            });
         });
-    });
-  </script>
+    </script>
 </body>
 </html>
+
